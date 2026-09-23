@@ -46,14 +46,14 @@ img{max-width:100%;display:block}
 
 /* NAV */
 header.nav{position:sticky;top:16px;z-index:50;width:calc(100% - 32px);max-width:calc(var(--maxw) - 8px);margin:16px auto 0;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:saturate(140%) blur(12px);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(16,35,59,.07)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:56px;margin:0 auto;padding:0 20px;gap:12px}
+.nav-in{display:flex;align-items:center;justify-content:space-between;min-height:56px;margin:0 auto;padding:12px 20px;gap:12px}
 .brand{display:flex;align-items:center;gap:11px;color:var(--ink);font-family:var(--serif);font-weight:600;flex:0 0 auto}
 .brand:hover{text-decoration:none}
 .brand .mark{width:30px;height:30px}
 .brand .bt{display:flex;flex-direction:column;line-height:1.05}
 .brand .bt b{font-size:15px;letter-spacing:.01em}
 .brand .bt span{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.nav-links{display:flex;align-items:center;gap:1px;flex-wrap:wrap;justify-content:flex-end}
+.nav-links{display:flex;align-items:center;gap:7px 1px;flex-wrap:wrap;justify-content:flex-end}
 .nav-links a{color:var(--ink-soft);font-size:14.5px;font-weight:500;padding:7px 11px;border-radius:8px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;cursor:pointer}
 .nav-links a:hover{color:var(--ink);background:var(--wash);text-decoration:none}
 .nav-links a.active{color:var(--navy);background:var(--accent-soft)}
