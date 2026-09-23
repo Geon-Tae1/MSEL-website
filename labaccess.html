@@ -65,8 +65,9 @@
     // ---- 국가 과제 · National R&D ----
     {
       cat:"national", role:"Principal Investigator",
-      title:"Sejong Science Fellowship", titleKo:"세종과학펠로우십 (국내트랙)",
-      funder:"한국연구재단 (과학기술정보통신부) · 개인기초연구사업",
+      title:"Development of Soft-Li-Rich-Based Pentanary Mid-Mn Cathodes for High-Energy and Long-Life Batteries",
+      titleKo:"소프트-과리튬 기반 오원계 미드망간 양극재 개발을 통한 고에너지·장수명 이차전지 실현",
+      funder:"한국연구재단 (과학기술정보통신부) · 세종과학펠로우십(국내트랙)",
       period:"2026.03 – 2031.02", budget:"100,000,000 KRW / year · 500,000,000 KRW total (5 yrs)",
       amount:500000000,
       manageURL:"https://claude.ai/code/artifact/e945dc9a-b49c-497a-80ce-9124cc92bc0c"
@@ -153,28 +154,62 @@
   function group(cat){return PROJ.filter(function(p){return p.cat===cat;}).map(card).join('');}
 
   // ---- cumulative funding ----
-  var sums={national:0,industry:0,hanyang:0,total:0}, pending=0;
+  var sums={national:0,industry:0,hanyang:0,total:0}, pending=0, funded=0;
   PROJ.forEach(function(p){
-    if(typeof p.amount==="number"){sums[p.cat]+=p.amount;sums.total+=p.amount;}
+    if(typeof p.amount==="number"){sums[p.cat]+=p.amount;sums.total+=p.amount;funded++;}
     else pending++;
   });
-  var note=pending>0?'<div class="fund-note">* 사업비 미정 과제 '+pending+'건은 합계에서 제외됨</div>':'';
-  var summary=
-    '<div class="fund-summary">'+
-      '<div class="fund-card"><div class="fk">정부 과제 · Government</div><div class="fv">'+won(sums.national)+'</div></div>'+
-      '<div class="fund-card"><div class="fk">기업 과제 · Industry</div><div class="fv">'+won(sums.industry)+'</div></div>'+
-      '<div class="fund-card"><div class="fk">교내 과제 · Hanyang</div><div class="fv">'+won(sums.hanyang)+'</div></div>'+
-      '<div class="fund-card total"><div class="fk">총 누적 · Total</div><div class="fv">'+won(sums.total)+'</div></div>'+
-    '</div>'+note;
+  function eok(n){var v=n/100000000;return (Math.round(v*10)/10)+'억 원';}
+  function pct(n){return sums.total?(n/sums.total*100):0;}
+  var CAT=[
+    {k:'national',ko:'정부 과제',en:'Government'},
+    {k:'industry',ko:'기업 과제',en:'Industry'},
+    {k:'hanyang',ko:'교내 과제',en:'Hanyang'}
+  ];
+  var seg=CAT.map(function(c){return '<div class="seg '+c.k+'" data-w="'+pct(sums[c.k]).toFixed(2)+'"></div>';}).join('');
+  var legend=CAT.map(function(c){
+    return '<div class="lg"><span class="dot '+c.k+'"></span><span class="lg-ko">'+c.ko+'</span>'+
+      '<span class="lg-amt">'+won(sums[c.k])+'</span><span class="lg-pct">'+Math.round(pct(sums[c.k]))+'%</span></div>';
+  }).join('');
+  var pnote=pending>0?'<span class="fp-pend">사업비 미정 '+pending+'건 제외</span>':'';
+  var panel=
+    '<div class="fund-panel reveal">'+
+      '<div class="fp-top">'+
+        '<div class="fp-hero">'+
+          '<div class="fp-label">총 연구비 누적 · Total secured funding</div>'+
+          '<div class="fp-num" data-target="'+sums.total+'">'+won(sums.total)+'</div>'+
+          '<div class="fp-sub">≈ '+eok(sums.total)+' · '+funded+'개 과제'+(pending>0?' (+'+pending+' 미정)':'')+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="fp-bar">'+seg+'</div>'+
+      '<div class="fp-legend">'+legend+'</div>'+
+      (pnote?'<div class="fund-note">* '+pnote+'</div>':'')+
+    '</div>';
 
   host.innerHTML=
-    summary+
+    panel+
     '<div class="proj-cat"><span class="cat-ko">국가 과제</span><span class="cat-en">National R&amp;D</span></div>'+
     '<div class="proj-grid">'+group('national')+'</div>'+
     '<div class="proj-cat"><span class="cat-ko">산업체 협력 과제</span><span class="cat-en">Industry collaboration</span></div>'+
     '<div class="proj-grid">'+group('industry')+'</div>'+
     '<div class="proj-cat"><span class="cat-ko">교내 과제</span><span class="cat-en">Hanyang University · internal</span></div>'+
     '<div class="proj-grid">'+group('hanyang')+'</div>';
+
+  // ---- animate: count-up + bar fill when visible ----
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var numEl=host.querySelector('.fp-num'), bar=host.querySelector('.fp-bar');
+  function fillBar(){host.querySelectorAll('.fp-bar .seg').forEach(function(s){s.style.width=s.getAttribute('data-w')+'%';});}
+  function countUp(){
+    var target=+numEl.getAttribute('data-target'), dur=1300, t0=null;
+    function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);var e=1-Math.pow(1-p,3);
+      numEl.textContent=won(Math.round(target*e));if(p<1)requestAnimationFrame(step);else numEl.textContent=won(target);}
+    requestAnimationFrame(step);
+  }
+  function run(){if(numEl._done)return;numEl._done=true;if(reduce){numEl.textContent=won(+numEl.getAttribute('data-target'));fillBar();return;}numEl.textContent=won(0);requestAnimationFrame(function(){fillBar();countUp();});}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)run();});},{threshold:.35});
+    io.observe(host.querySelector('.fund-panel'));
+  } else run();
 })();
 </script>
 </body>
