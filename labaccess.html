@@ -59,6 +59,8 @@
   // separate private page linked via "manageURL" (passcode-gated). Set manageURL
   // to the deployed management page for each project (or "" if not ready).
   // ============================================================================
+  // Each project: cat, role, title, titleKo, funder, period, budget (display),
+  // amount (KRW number for cumulative total; null = not-yet-known → excluded), manageURL.
   var PROJ=[
     // ---- 국가 과제 · National R&D ----
     {
@@ -66,6 +68,7 @@
       title:"Sejong Science Fellowship", titleKo:"세종과학펠로우십 (국내트랙)",
       funder:"한국연구재단 (과학기술정보통신부) · 개인기초연구사업",
       period:"2026.03 – 2031.02", budget:"100,000,000 KRW / year · 500,000,000 KRW total (5 yrs)",
+      amount:500000000,
       manageURL:"https://claude.ai/code/artifact/e945dc9a-b49c-497a-80ce-9124cc92bc0c"
     },
     {
@@ -73,45 +76,61 @@
       title:"Basic Design of Next-Generation Secondary-Battery-Based ESS (High-Safety, Long-Life, Low-Cost)",
       titleKo:"고안전·장수명·저비용 차세대 이차전지 기반 ESS 기본설계",
       funder:"AX 실증밸리 조성(R&D) · 과기정통부 · 기후에너지환경부 · 산업통상자원부",
-      period:"2026.10.01 – 2028.03.31", budget:"130,000,000 KRW", manageURL:""
+      period:"2026.10.01 – 2028.03.31", budget:"130,000,000 KRW", amount:130000000, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"Molecular-Design-Based Additive & Electrolyte Technology for High-Ni Cathode Interface Stabilization",
       titleKo:"고에너지·장수명 전기차 배터리용 하이니켈 양극 계면 안정화 분자설계 기반 첨가제·전해액 기술 개발",
       funder:"한국연구재단 · 미래유망원천기술개발사업",
-      period:"2026.07 – 2030.12", budget:"", manageURL:""
+      period:"2026.07 – 2030.12", budget:"", amount:null, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"High-Performance, High-Stability Cathode Source Technology for Market-Leading Batteries",
       titleKo:"이차전지 시장 선도형 고성능·고안정성 양극재 원천기술 개발",
       funder:"과학기술정보통신부 · 국내 글로벌 석학 연구역량 활용 지원사업",
-      period:"2026.07 – 2030.12", budget:"", manageURL:""
+      period:"2026.07 – 2030.12", budget:"", amount:null, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"Advanced-Industry Specialized Graduate School (Battery)",
       titleKo:"첨단산업 특성화대학원 지원 (배터리)",
       funder:"한국산업기술진흥원(KIAT) · 산업통상자원부 · 산업혁신인재성장지원사업",
-      period:"2024.03 – 2029.02", budget:"", manageURL:""
+      period:"2024.03 – 2029.02", budget:"", amount:null, manageURL:""
     },
     // ---- 산업체 협력 과제 · Industry collaboration ----
     {
       cat:"industry", role:"Principal Investigator",
       title:"POSCO Holdings — N.EX.T Hub", titleKo:"",
       funder:"POSCO Holdings",
-      period:"2027.01 –", budget:"100,000,000 KRW", manageURL:""
+      period:"2027.01 –", budget:"100,000,000 KRW", amount:100000000, manageURL:""
     },
     {
       cat:"industry", role:"Participating",
       title:"LG Energy Solution", titleKo:"",
       funder:"LG Energy Solution",
-      period:"2026.06 –", budget:"80,000,000 KRW", manageURL:""
+      period:"2026.06 –", budget:"80,000,000 KRW", amount:80000000, manageURL:""
+    },
+    // ---- 교내 과제 · Hanyang University (internal) ----
+    {
+      cat:"hanyang", role:"Principal Investigator",
+      title:"New Faculty Settlement Support Grant", titleKo:"신임교원 정착지원금 (과제명 없음)",
+      funder:"한양대학교",
+      period:"2026.09.01 – 2027.08.31", budget:"10,000,000 KRW", amount:10000000, manageURL:""
+    },
+    {
+      cat:"hanyang", role:"Principal Investigator",
+      title:"Core Materials for High-Energy-Density, High-Stability Mid-Mn Cathodes",
+      titleKo:"고에너지밀도·고안정성 미드망간계 양극재 핵심소재 개발 · 신임교원 정착 연구 지원사업",
+      funder:"한양대학교 · 신임교원 정착 연구 지원사업",
+      period:"2026.09.01 – 2027.08.31", budget:"30,000,000 KRW", amount:30000000, manageURL:""
     }
   ];
 
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function comma(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+  function won(n){return comma(n)+' KRW';}
   var host=document.getElementById('proj-groups');
   if(!host) return;
   function roleTag(r){
@@ -132,11 +151,30 @@
     '</div>';
   }
   function group(cat){return PROJ.filter(function(p){return p.cat===cat;}).map(card).join('');}
+
+  // ---- cumulative funding ----
+  var sums={national:0,industry:0,hanyang:0,total:0}, pending=0;
+  PROJ.forEach(function(p){
+    if(typeof p.amount==="number"){sums[p.cat]+=p.amount;sums.total+=p.amount;}
+    else pending++;
+  });
+  var note=pending>0?'<div class="fund-note">* 사업비 미정 과제 '+pending+'건은 합계에서 제외됨</div>':'';
+  var summary=
+    '<div class="fund-summary">'+
+      '<div class="fund-card"><div class="fk">정부 과제 · Government</div><div class="fv">'+won(sums.national)+'</div></div>'+
+      '<div class="fund-card"><div class="fk">기업 과제 · Industry</div><div class="fv">'+won(sums.industry)+'</div></div>'+
+      '<div class="fund-card"><div class="fk">교내 과제 · Hanyang</div><div class="fv">'+won(sums.hanyang)+'</div></div>'+
+      '<div class="fund-card total"><div class="fk">총 누적 · Total</div><div class="fv">'+won(sums.total)+'</div></div>'+
+    '</div>'+note;
+
   host.innerHTML=
+    summary+
     '<div class="proj-cat"><span class="cat-ko">국가 과제</span><span class="cat-en">National R&amp;D</span></div>'+
     '<div class="proj-grid">'+group('national')+'</div>'+
     '<div class="proj-cat"><span class="cat-ko">산업체 협력 과제</span><span class="cat-en">Industry collaboration</span></div>'+
-    '<div class="proj-grid">'+group('industry')+'</div>';
+    '<div class="proj-grid">'+group('industry')+'</div>'+
+    '<div class="proj-cat"><span class="cat-ko">교내 과제</span><span class="cat-en">Hanyang University · internal</span></div>'+
+    '<div class="proj-grid">'+group('hanyang')+'</div>';
 })();
 </script>
 </body>
