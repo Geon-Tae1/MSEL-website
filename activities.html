@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activities — Materials for Sustainable Energy Lab</title>
+<meta name="description" content="Materials for Sustainable Energy Lab, led by Prof. Geon-Tae Park at Hanyang University.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="activities">
+<div id="site-header"></div>
+<main>
+
+<div class="page-head"><div class="strata"></div><div class="wrap page-head-in reveal"><div class="eyebrow">Activities</div><h1>Lab life</h1><p>Conferences, talks, and moments from research life. Click a card to view the photos and details.</p></div></div>
+<section class="section"><div class="wrap">
+  <div class="gallery" id="act-grid"></div>
+</div></section>
+<div class="lb" id="lb" aria-modal="true" role="dialog">
+  <div class="lb-box">
+    <button class="lb-close" id="lb-close" aria-label="Close">×</button>
+    <div class="lb-stage">
+      <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous">‹</button>
+      <img id="lb-img" src="" alt="">
+      <button class="lb-nav lb-next" id="lb-next" aria-label="Next">›</button>
+    </div>
+    <div class="lb-cap">
+      <div class="adate" id="lb-date"></div>
+      <h3 id="lb-title"></h3>
+      <p id="lb-desc"></p>
+      <div class="lb-count" id="lb-count"></div>
+      <div class="lb-thumbs" id="lb-thumbs"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+<div id="site-footer"></div>
+<script defer src="app.js"></script>
+<script>
+(function(){
+  var ACT=[
+   {d:"Sep 2026",t:"Prof. Doron Aurbach's visit to Korea",x:"Seminar and dinners during Prof. Doron Aurbach's visit — including a meal at Chabad of Korea, a Jewish synagogue, and celebrating his birthday together with Prof. Yang-Kook Sun.",g:["doron-1.jpg"]},
+   {d:"Jun 2026",t:"IMLB 2026, Montréal, Canada",x:"Presented 'Next-Generation High-Energy Layered Cathode Materials for Long-Life and Safe Lithium Batteries' at the IMLB meeting in Montréal.",g:["imlb2026-1.jpg","imlb2026-4.png"]},
+   {d:"Mar 2026",t:"Talk & cherry blossoms at the University of Washington",x:"Gave a talk, 'Structural Engineering of Layered NMC Cathode Materials for Advanced LIBs,' to the groups of Prof. Jihui Yang, Prof. Jie Xiao, and Prof. Jun Liu at UW, and enjoyed the cherry blossoms with members (Simon, Shineui, Harvey, Jie, Yuchen).",g:["uw-talk-1.jpg"]},
+   {d:"Mar 2026",t:"With Prof. Jihui Yang (UW)",x:"With Prof. Jihui Yang, the research PI, on the University of Washington campus.",g:["uw-jihui-1.jpg"]},
+   {d:"Mar 2026",t:"UW Suzzallo & Allen Libraries",x:"At the UW Suzzallo and Allen Libraries — a favorite study spot, famous as a 'Harry Potter' library — with Trung.",g:["uw-library-1.jpg"]},
+   {d:"Oct 2025",t:"POSCO Forum",x:"Presented 'Zero-Strain Mid-Mn Layered Cathode' at the POSCO Forum, discussing next-generation cathode technologies for lithium-ion batteries.",g:["posco-1.jpg"]},
+   {d:"May 2025",t:"247th ECS Meeting, Montréal, Canada",x:"Presented 'Crack-Surface Protection Strategy of Ni-Rich Layered Cathode for Batteries with High Electrode Density,' and served as session chair for A03 – Cathode 1, at the 247th ECS Meeting.",g:["ecs247-1.jpg","ecs247-2.png"]},
+   {d:"May 2024",t:"245th ECS Meeting, San Francisco, USA",x:"Presented 'Intergranular Shielding of Ultrafine-Grained Ni-Rich Layered Cathode for Advanced Lithium-Ion Batteries' at the 245th ECS Meeting.",g:["ecs245-1.jpg"]},
+   {d:"Oct 2023",t:"244th ECS Meeting, Gothenburg, Sweden",x:"Presented 'Transition-Metal-Doped Co-Free Layered Cathode for High-Performance Li-Ion Batteries' at the 244th ECS Meeting.",g:["ecs244-1.jpg"]},
+   {d:"Jul 2023",t:"Energy New-Industry Export Roundtable",x:"Presented on energy-sector talent development and successful global research collaborations at the roundtable hosted by the Ministry of Trade, Industry and Energy (chaired by Minister Chang-yang Lee).",g:["energy-roundtable-1.jpg"]},
+   {d:"Oct 2022",t:"242nd ECS Meeting, Atlanta, USA",x:"Presented 'Ultrafine-Grained Ni-Rich Layered Cathode for High-Performance Li-Ion Batteries' at the 242nd ECS Meeting.",g:["ecs242-1.jpg"]},
+   {d:"Oct 2019",t:"236th ECS Meeting, Atlanta, USA",x:"Presented 'Bulk/Surface-Stabilized Tungsten-Doped Ni-Rich Layered Cathode Material for High-Energy-Density Lithium-Ion Batteries' at the 236th ECS Meeting.",g:["ecs236-1.png"]}
+  ];
+  var ADIR="images/activities/";
+  function AU(f){return (window.__AURI__&&window.__AURI__[f])?window.__AURI__[f]:ADIR+f;}
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  var grid=document.getElementById('act-grid'); if(!grid)return;
+  grid.innerHTML=ACT.map(function(a,i){
+    var cnt=a.g.length>1?'<span class="cnt">'+a.g.length+' photos</span>':'';
+    return '<div class="acard" data-i="'+i+'" tabindex="0" role="button" aria-label="'+esc(a.t)+'"><div class="ath">'+cnt+'<img loading="lazy" src="'+AU(a.g[0])+'" alt="'+esc(a.t)+'"></div><div class="abody"><div class="adate">'+esc(a.d)+'</div><h3>'+esc(a.t)+'</h3><p>'+esc(a.x)+'</p></div></div>';
+  }).join('');
+  var lb=document.getElementById('lb'); if(!lb)return;
+  var img=document.getElementById('lb-img'),cur=0,idx=0;
+  function show(){var a=ACT[cur];img.src=AU(a.g[idx]);
+    document.getElementById('lb-date').textContent=a.d;document.getElementById('lb-title').textContent=a.t;document.getElementById('lb-desc').textContent=a.x;
+    var multi=a.g.length>1;
+    document.getElementById('lb-count').textContent=multi?((idx+1)+' / '+a.g.length):'';
+    document.getElementById('lb-prev').style.display=multi?'':'none';document.getElementById('lb-next').style.display=multi?'':'none';
+    document.getElementById('lb-thumbs').innerHTML=multi?a.g.map(function(f,k){return '<img data-k="'+k+'" class="'+(k===idx?'on':'')+'" src="'+AU(f)+'">';}).join(''):'';}
+  function openLB(i){cur=i;idx=0;show();lb.classList.add('open');document.body.style.overflow='hidden';}
+  function closeLB(){lb.classList.remove('open');document.body.style.overflow='';}
+  grid.addEventListener('click',function(e){var c=e.target.closest('.acard');if(c)openLB(+c.getAttribute('data-i'));});
+  grid.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){var c=e.target.closest('.acard');if(c){e.preventDefault();openLB(+c.getAttribute('data-i'));}}});
+  document.getElementById('lb-close').addEventListener('click',closeLB);
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLB();});
+  document.getElementById('lb-prev').addEventListener('click',function(){var a=ACT[cur];idx=(idx-1+a.g.length)%a.g.length;show();});
+  document.getElementById('lb-next').addEventListener('click',function(){var a=ACT[cur];idx=(idx+1)%a.g.length;show();});
+  document.getElementById('lb-thumbs').addEventListener('click',function(e){if(e.target.tagName==='IMG'){idx=+e.target.getAttribute('data-k');show();}});
+  document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLB();else if(e.key==='ArrowLeft')document.getElementById('lb-prev').click();else if(e.key==='ArrowRight')document.getElementById('lb-next').click();});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab Access Only — Materials for Sustainable Energy Lab</title>
+<meta name="description" content="Materials for Sustainable Energy Lab, led by Prof. Geon-Tae Park at Hanyang University.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="labaccess">
+<div id="site-header"></div>
+<main>
+
+<div class="page-head"><div class="strata"></div><div class="wrap page-head-in reveal"><div class="eyebrow">Lab Access Only</div><h1>Lab Access Only</h1><p>Members-only area for project details, yearly milestones, and task assignments.</p></div></div>
+<section class="section"><div class="wrap">
+  <div id="gate-box" class="gate">
+    <div class="lk"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></div>
+    <h3>Members only</h3>
+    <p>This section contains internal project information. Please enter the lab passcode to continue.</p>
+    <form id="gate-form"><input id="gate-input" type="password" placeholder="Passcode" autocomplete="off" aria-label="Passcode"><button class="btn btn-primary" type="submit">Enter</button></form>
+    <div class="err" id="gate-err"></div>
+    <div class="note">Contact the PI for access.</div>
+  </div>
+  <div id="proj-body" class="proj-body">
+    <div class="subhead reveal" style="margin-top:0">Funded projects</div>
+    <p class="proj-hint reveal">Overview of funded projects, grouped by national R&amp;D and industry collaboration. Detailed year-by-year plans, targets, and tasks are managed on a separate private page — click <b>Manage details</b> on a project.</p>
+    <div id="proj-groups" class="reveal"></div>
+  </div>
+</div></section>
+
+</main>
+<div id="site-footer"></div>
+<script defer src="app.js"></script>
+<script>
+(function(){
+  // NOTE: client-side gate only — NOT real security. Do not put confidential data
+  // directly in this page. See README for a secure approach.
+  var PASSCODE="rjsxoqkr8330";  // <-- change this
+  var form=document.getElementById('gate-form');
+  if(!form)return;
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=document.getElementById('gate-input').value.trim();
+    if(v===PASSCODE){
+      document.getElementById('gate-box').style.display='none';
+      var b=document.getElementById('proj-body'); b.style.display='block';
+      try{sessionStorage.setItem('mse_proj','1');}catch(_){}
+      b.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});
+    } else {
+      document.getElementById('gate-err').textContent='Incorrect passcode.';
+    }
+  });
+  try{ if(sessionStorage.getItem('mse_proj')==='1'){document.getElementById('gate-box').style.display='none';var b=document.getElementById('proj-body');b.style.display='block';b.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});} }catch(_){}
+})();
+</script><script>
+(function(){
+  // ============================================================================
+  // Project cards = summary only. Detailed year-by-year plans are managed on a
+  // separate private page linked via "manageURL" (passcode-gated). Set manageURL
+  // to the deployed management page for each project (or "" if not ready).
+  // ============================================================================
+  var PROJ=[
+    // ---- 국가 과제 · National R&D ----
+    {
+      cat:"national", role:"Principal Investigator",
+      title:"Sejong Science Fellowship", titleKo:"세종과학펠로우십 (국내트랙)",
+      funder:"한국연구재단 (과학기술정보통신부) · 개인기초연구사업",
+      period:"2026.03 – 2031.02", budget:"100,000,000 KRW / year · 500,000,000 KRW total (5 yrs)",
+      manageURL:"https://claude.ai/code/artifact/e945dc9a-b49c-497a-80ce-9124cc92bc0c"
+    },
+    {
+      cat:"national", role:"Participating",
+      title:"Basic Design of Next-Generation Secondary-Battery-Based ESS (High-Safety, Long-Life, Low-Cost)",
+      titleKo:"고안전·장수명·저비용 차세대 이차전지 기반 ESS 기본설계",
+      funder:"AX 실증밸리 조성(R&D) · 과기정통부 · 기후에너지환경부 · 산업통상자원부",
+      period:"2026.10.01 – 2028.03.31", budget:"130,000,000 KRW", manageURL:""
+    },
+    {
+      cat:"national", role:"Participating",
+      title:"Molecular-Design-Based Additive & Electrolyte Technology for High-Ni Cathode Interface Stabilization",
+      titleKo:"고에너지·장수명 전기차 배터리용 하이니켈 양극 계면 안정화 분자설계 기반 첨가제·전해액 기술 개발",
+      funder:"한국연구재단 · 미래유망원천기술개발사업",
+      period:"2026.07 – 2030.12", budget:"", manageURL:""
+    },
+    {
+      cat:"national", role:"Participating",
+      title:"High-Performance, High-Stability Cathode Source Technology for Market-Leading Batteries",
+      titleKo:"이차전지 시장 선도형 고성능·고안정성 양극재 원천기술 개발",
+      funder:"과학기술정보통신부 · 국내 글로벌 석학 연구역량 활용 지원사업",
+      period:"2026.07 – 2030.12", budget:"", manageURL:""
+    },
+    {
+      cat:"national", role:"Participating",
+      title:"Advanced-Industry Specialized Graduate School (Battery)",
+      titleKo:"첨단산업 특성화대학원 지원 (배터리)",
+      funder:"한국산업기술진흥원(KIAT) · 산업통상자원부 · 산업혁신인재성장지원사업",
+      period:"2024.03 – 2029.02", budget:"", manageURL:""
+    },
+    // ---- 산업체 협력 과제 · Industry collaboration ----
+    {
+      cat:"industry", role:"Principal Investigator",
+      title:"POSCO Holdings — N.EX.T Hub", titleKo:"",
+      funder:"POSCO Holdings",
+      period:"2027.01 –", budget:"100,000,000 KRW", manageURL:""
+    },
+    {
+      cat:"industry", role:"Participating",
+      title:"LG Energy Solution", titleKo:"",
+      funder:"LG Energy Solution",
+      period:"2026.06 –", budget:"80,000,000 KRW", manageURL:""
+    }
+  ];
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var host=document.getElementById('proj-groups');
+  if(!host) return;
+  function roleTag(r){
+    var pi=/principal/i.test(r);
+    return '<span class="pt '+(pi?'pi':'part')+'">'+esc(r)+'</span>';
+  }
+  function card(p){
+    var link=p.manageURL
+      ? '<a class="pjmanage" href="'+esc(p.manageURL)+'" target="_blank" rel="noopener">Manage details →</a>'
+      : '<span class="pjmanage soon">Management page — coming soon</span>';
+    var ko=p.titleKo?'<div class="pjko">'+esc(p.titleKo)+'</div>':'';
+    var bud=p.budget?'<div class="pjbudget">'+esc(p.budget)+'</div>':'<div class="pjbudget none">사업비 미정</div>';
+    return '<div class="pjcard">'+
+      roleTag(p.role)+
+      '<h3>'+esc(p.title)+'</h3>'+ko+
+      '<div class="pm"><b>'+esc(p.period)+'</b> · '+esc(p.funder)+'</div>'+
+      bud+ link+
+    '</div>';
+  }
+  function group(cat){return PROJ.filter(function(p){return p.cat===cat;}).map(card).join('');}
+  host.innerHTML=
+    '<div class="proj-cat"><span class="cat-ko">국가 과제</span><span class="cat-en">National R&amp;D</span></div>'+
+    '<div class="proj-grid">'+group('national')+'</div>'+
+    '<div class="proj-cat"><span class="cat-ko">산업체 협력 과제</span><span class="cat-en">Industry collaboration</span></div>'+
+    '<div class="proj-grid">'+group('industry')+'</div>';
+})();
+</script>
+</body>
+</html>
