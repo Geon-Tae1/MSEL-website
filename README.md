@@ -33,8 +33,8 @@ members.html       Team ▸ Members
 alumni.html        Team ▸ Alumni
 research.html      Research (What we work on — 큰 그림 블록)
 publications.html  Publications (요약 + 연도별 논문)
-conference.html    Conference (연도별)
-lecture.html       Lecture (학부/대학원)
+talks.html         Talks · 학회 구두발표 (연도별) — conference.html 은 리다이렉트 유지
+teaching.html      Teaching · 강의 과목 (학부/대학원) — lecture.html 은 리다이렉트 유지
 notice.html        Notice
 labaccess.html     Lab Access Only (관계자 전용 · 암호 게이트 통과 후에만 Project 내용 노출)
 activities.html    Activities (활동 사진 — 추후)
