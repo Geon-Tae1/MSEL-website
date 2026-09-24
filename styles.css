@@ -255,6 +255,19 @@ main{min-height:50vh}
 .chip.cofirst{color:var(--gold);border-color:var(--gold);background:transparent}
 
 /* CONFERENCE / NOTICE lists */
+.confmap-card{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:20px 22px;margin:0 0 32px;max-width:920px}
+.confmap-h{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:12px}
+:root[data-theme="dark"] .confmap-h{color:var(--accent)}
+.confmap-wrap{background:var(--wash);border:1px solid var(--line);border-radius:12px;padding:8px}
+.confmap{display:block;width:100%;max-width:100%;height:auto}
+.confmap .grat line{stroke:var(--line-strong);stroke-width:.4;opacity:.5}
+.confmap .land path{fill:var(--line-strong);opacity:.75}
+:root[data-theme="dark"] .confmap .land path{fill:#2a3b56;opacity:1}
+@media (prefers-color-scheme:dark){.confmap .land path{fill:#2a3b56;opacity:1}}
+.confmap .mk circle{fill:var(--accent);stroke:var(--paper);stroke-width:1.4}
+.confmap-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px}
+.confmap-legend .cl{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft)}
+.confmap-legend .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
 .listwrap{max-width:920px}
 .conf-item{display:grid;grid-template-columns:96px 1fr;gap:22px;padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
 .conf-item .cd{font-family:var(--sans);font-size:14px;color:var(--navy);font-weight:600}
@@ -432,6 +445,7 @@ footer{background:var(--navy-deep);color:#cddcef;padding:42px 0;margin-top:40px}
   .nav-links.open .dropdown::before{display:none}
   .nav-links.open .dropdown a{position:relative;padding:9px 11px 9px 16px}
   .nav-links.open .dropdown a::before{content:"";position:absolute;left:0;top:50%;width:11px;height:2px;background:var(--line-strong);border-radius:1px}
+  .nav-links.open .nav-item>a{font-weight:600}
   .nav-links.open .nav-item>a .cw{display:none}
   .menu-btn{display:inline-flex}
   .trow{grid-template-columns:150px 1fr;gap:14px}
