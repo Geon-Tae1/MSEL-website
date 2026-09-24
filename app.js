@@ -57,7 +57,11 @@
   function closeMenu(){if(!menu)return;menu.classList.remove('open');if(mb)mb.setAttribute('aria-expanded','false');}
   if(mb)mb.addEventListener('click',function(){
     var open=!menu.classList.contains('open');
-    if(open){placeMenu();menu.classList.add('open');menu.scrollTop=0;}
+    if(open){
+      placeMenu();menu.classList.add('open');menu.scrollTop=0;
+      // some in-app browsers restore/adjust the scroll offset a frame later
+      requestAnimationFrame(function(){menu.scrollTop=0;placeMenu();});
+    }
     else menu.classList.remove('open');
     mb.setAttribute('aria-expanded',open?'true':'false');
   });
