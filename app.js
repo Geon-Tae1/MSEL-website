@@ -25,12 +25,14 @@
   function buildHeader(active){
     var links=NAV.map(function(n){
       var lk=n.lock?(' '+LOCK):'';
+      // force a second row starting at "Lecture" (balances the wrapped desktop nav)
+      var brk=(n.id==='lecture')?'<span class="nav-break" aria-hidden="true"></span>':'';
       if(n.children){
         var sub=n.children.map(function(c){return '<a href="'+href(c.id)+'" data-nav="'+c.id+'"'+(c.id===active?' class="active"':'')+'>'+c.label+'</a>';}).join('');
         var top='<a href="'+href(n.children[0].id)+'" data-nav="'+n.id+'"'+(isActive(n.id,active)?' class="active"':'')+'>'+n.label+lk+CHEV+'</a>';
-        return '<div class="nav-item">'+top+'<div class="dropdown">'+sub+'</div></div>';
+        return brk+'<div class="nav-item">'+top+'<div class="dropdown">'+sub+'</div></div>';
       }
-      return '<a href="'+href(n.id)+'" data-nav="'+n.id+'"'+(n.id===active?' class="active"':'')+'>'+n.label+lk+'</a>';
+      return brk+'<a href="'+href(n.id)+'" data-nav="'+n.id+'"'+(n.id===active?' class="active"':'')+'>'+n.label+lk+'</a>';
     }).join('');
     return '<header class="nav"><div class="nav-in">'+
       '<a class="brand" href="'+href('home')+'">'+MARK+'<span class="bt"><b>Materials for Sustainable Energy Lab</b><span>Hanyang University</span></span></a>'+
