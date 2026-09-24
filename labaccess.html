@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lab Access Only — Materials for Sustainable Energy Lab</title>
 <meta name="description" content="Materials for Sustainable Energy Lab, led by Prof. Geon-Tae Park at Hanyang University.">
-<link rel="stylesheet" href="styles.css?v=9518bb15">
+<link rel="stylesheet" href="styles.css?v=393ec43b">
 </head>
 <body data-page="labaccess">
 <div id="site-header"></div>
@@ -30,7 +30,7 @@
 
 </main>
 <div id="site-footer"></div>
-<script defer src="app.js?v=9518bb15"></script>
+<script defer src="app.js?v=393ec43b"></script>
 <script>
 (function(){
   // NOTE: client-side gate only — NOT real security. Do not put confidential data
@@ -60,7 +60,8 @@
   // to the deployed management page for each project (or "" if not ready).
   // ============================================================================
   // Each project: cat, role, title, titleKo, funder, period, budget (display),
-  // amount (KRW number for cumulative total; null = not-yet-known → excluded), manageURL.
+  // amount (KRW number counted in the cumulative total), manageURL.
+  //   sub:true  → 참여(이름 등재)만 한 과제. 따로 수주한 연구비가 없으므로 합계에서 제외한다.
   var PROJ=[
     // ---- 국가 과제 · National R&D ----
     {
@@ -77,41 +78,47 @@
       title:"Basic Design of Next-Generation Secondary-Battery-Based ESS (High-Safety, Long-Life, Low-Cost)",
       titleKo:"고안전·장수명·저비용 차세대 이차전지 기반 ESS 기본설계",
       funder:"AX 실증밸리 조성(R&D) · 과기정통부 · 기후에너지환경부 · 산업통상자원부",
-      period:"2026.10.01 – 2028.03.31", budget:"130,000,000 KRW", amount:130000000, manageURL:""
+      period:"2026.10.01 – 2028.03.31",
+      budget:"30,000,000 KRW (yr 1) + 100,000,000 KRW (yr 2) · 130,000,000 KRW total",
+      amount:130000000, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"Molecular-Design-Based Additive & Electrolyte Technology for High-Ni Cathode Interface Stabilization",
       titleKo:"고에너지·장수명 전기차 배터리용 하이니켈 양극 계면 안정화 분자설계 기반 첨가제·전해액 기술 개발",
       funder:"한국연구재단 · 미래유망원천기술개발사업",
-      period:"2026.07 – 2030.12", budget:"", amount:null, manageURL:""
+      period:"2026.07 – 2030.12", budget:"", amount:null, sub:true, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"High-Performance, High-Stability Cathode Source Technology for Market-Leading Batteries",
       titleKo:"이차전지 시장 선도형 고성능·고안정성 양극재 원천기술 개발",
       funder:"과학기술정보통신부 · 국내 글로벌 석학 연구역량 활용 지원사업",
-      period:"2026.07 – 2030.12", budget:"", amount:null, manageURL:""
+      period:"2026.07 – 2030.12", budget:"", amount:null, sub:true, manageURL:""
     },
     {
       cat:"national", role:"Participating",
       title:"Advanced-Industry Specialized Graduate School (Battery)",
       titleKo:"첨단산업 특성화대학원 지원 (배터리)",
       funder:"한국산업기술진흥원(KIAT) · 산업통상자원부 · 산업혁신인재성장지원사업",
-      period:"2024.03 – 2029.02", budget:"", amount:null, manageURL:""
+      period:"2024.03 – 2029.02", budget:"", amount:null, sub:true, manageURL:""
     },
     // ---- 산업체 협력 과제 · Industry collaboration ----
     {
       cat:"industry", role:"Principal Investigator",
-      title:"POSCO Holdings — N.EX.T Hub", titleKo:"",
-      funder:"POSCO Holdings",
-      period:"2027.01 –", budget:"100,000,000 KRW", amount:100000000, manageURL:""
+      title:"Development of High-Entropy Next-Generation Cathode Materials",
+      titleKo:"하이엔트로피 차세대 양극재 개발",
+      funder:"POSCO Holdings · N.EX.T Hub",
+      period:"2027.01 – 2027.10 (10 months)", budget:"100,000,000 KRW", amount:100000000, manageURL:""
     },
     {
       cat:"industry", role:"Participating",
-      title:"LG Energy Solution", titleKo:"",
+      title:"Long-Term Cycling Degradation Mechanism of Single-Crystal Cathodes",
+      titleKo:"단결정 양극재 장기사이클 열화 메커니즘 분석",
       funder:"LG Energy Solution",
-      period:"2026.06 –", budget:"80,000,000 KRW", amount:80000000, manageURL:""
+      period:"2026.06.01 – 2027.04.30 (11 months)",
+      budget:"80,000,000 KRW total · my share 525,000 KRW × 11 mo = 5,775,000 KRW",
+      amount:5775000, manageURL:""
     },
     // ---- 교내 과제 · Hanyang University (internal) ----
     {
@@ -143,7 +150,8 @@
       ? '<a class="pjmanage" href="'+esc(p.manageURL)+'" target="_blank" rel="noopener">Manage details →</a>'
       : '<span class="pjmanage soon">Management page — coming soon</span>';
     var ko=p.titleKo?'<div class="pjko">'+esc(p.titleKo)+'</div>':'';
-    var bud=p.budget?'<div class="pjbudget">'+esc(p.budget)+'</div>':'<div class="pjbudget none">사업비 미정</div>';
+    var bud=p.budget?'<div class="pjbudget">'+esc(p.budget)+'</div>'
+      :'<div class="pjbudget none">참여 역할 · 연구비 합계 미포함</div>';
     return '<div class="pjcard">'+
       roleTag(p.role)+
       '<h3>'+esc(p.title)+'</h3>'+ko+
@@ -154,10 +162,10 @@
   function group(cat){return PROJ.filter(function(p){return p.cat===cat;}).map(card).join('');}
 
   // ---- cumulative funding ----
-  var sums={national:0,industry:0,hanyang:0,total:0}, pending=0, funded=0;
+  var sums={national:0,industry:0,hanyang:0,total:0}, subonly=0, funded=0;
   PROJ.forEach(function(p){
     if(typeof p.amount==="number"){sums[p.cat]+=p.amount;sums.total+=p.amount;funded++;}
-    else pending++;
+    else subonly++;   // 참여 역할만 한 과제 — 수주 연구비 없음
   });
   function eok(n){var v=n/100000000;return (Math.round(v*10)/10)+'억 원';}
   function pct(n){return sums.total?(n/sums.total*100):0;}
@@ -171,14 +179,14 @@
     return '<div class="lg"><span class="dot '+c.k+'"></span><span class="lg-ko">'+c.ko+'</span>'+
       '<span class="lg-amt">'+won(sums[c.k])+'</span><span class="lg-pct">'+Math.round(pct(sums[c.k]))+'%</span></div>';
   }).join('');
-  var pnote=pending>0?'<span class="fp-pend">사업비 미정 '+pending+'건 제외</span>':'';
+  var pnote=subonly>0?'<span class="fp-pend">참여(sub) 역할 '+subonly+'건은 수주 연구비가 없어 합계에 포함하지 않음</span>':'';
   var panel=
     '<div class="fund-panel reveal">'+
       '<div class="fp-top">'+
         '<div class="fp-hero">'+
           '<div class="fp-label">총 연구비 누적 · Total secured funding</div>'+
           '<div class="fp-num" data-target="'+sums.total+'">'+won(sums.total)+'</div>'+
-          '<div class="fp-sub">≈ '+eok(sums.total)+' · '+funded+'개 과제'+(pending>0?' (+'+pending+' 미정)':'')+'</div>'+
+          '<div class="fp-sub">≈ '+eok(sums.total)+' · 연구비 수주 '+funded+'건'+(subonly>0?' · 참여 역할 '+subonly+'건 별도':'')+'</div>'+
         '</div>'+
       '</div>'+
       '<div class="fp-bar">'+seg+'</div>'+

@@ -192,7 +192,7 @@ main{min-height:50vh}
 .bin{display:grid;grid-template-columns:130px 1fr 42px;gap:14px;align-items:center;margin-bottom:12px}
 .bin .bl{font-size:13.5px;color:var(--ink-soft);font-weight:600;font-family:var(--mono)}
 .bin .bt{height:22px;background:var(--wash);border-radius:6px;overflow:hidden}
-.bin .bf{height:100%;border-radius:6px;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1);background:var(--navy)}
+.bin .bf{height:100%;border-radius:6px;width:0;min-width:7px;transition:width .9s cubic-bezier(.2,.7,.2,1);background:var(--navy)}
 .bin .bf.b0{background:linear-gradient(90deg,#B8912F,#E3C468)}
 .bin .bf.b1{background:linear-gradient(90deg,#2E8B8B,#5cb3b0)}
 .bin .bf.b2{background:linear-gradient(90deg,#2f6fb0,#5a98d4)}
@@ -258,16 +258,24 @@ main{min-height:50vh}
 .confmap-card{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:20px 22px;margin:0 0 32px;max-width:920px}
 .confmap-h{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:12px}
 :root[data-theme="dark"] .confmap-h{color:var(--accent)}
-.confmap-wrap{background:var(--wash);border:1px solid var(--line);border-radius:12px;padding:8px}
+.confmap-wrap{background:linear-gradient(180deg,#eaf1f8,#e3ecf5);border:1px solid var(--line);border-radius:12px;padding:8px}
+:root[data-theme="dark"] .confmap-wrap{background:linear-gradient(180deg,#0f1c2e,#0c1725)}
+@media (prefers-color-scheme:dark){.confmap-wrap{background:linear-gradient(180deg,#0f1c2e,#0c1725)}}
 .confmap{display:block;width:100%;max-width:100%;height:auto}
-.confmap .grat line{stroke:var(--line-strong);stroke-width:.4;opacity:.5}
-.confmap .land path{fill:var(--line-strong);opacity:.75}
-:root[data-theme="dark"] .confmap .land path{fill:#2a3b56;opacity:1}
-@media (prefers-color-scheme:dark){.confmap .land path{fill:#2a3b56;opacity:1}}
-.confmap .mk circle{fill:var(--accent);stroke:var(--paper);stroke-width:1.4}
-.confmap-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px}
+.confmap .grat line{stroke:#8ba6c4;stroke-width:.3;opacity:.35}
+.confmap .land path{fill:#cfdae6;stroke:#a9bdd2;stroke-width:.35;stroke-linejoin:round;fill-rule:evenodd}
+:root[data-theme="dark"] .confmap .land path{fill:#27374d;stroke:#3a4e6b}
+@media (prefers-color-scheme:dark){.confmap .land path{fill:#27374d;stroke:#3a4e6b}}
+/* one colour per city — the same --c drives the map pin and the legend dot */
+.s1{--c:#d1495b}.s2{--c:#e08e1b}.s3{--c:#1f8a70}.s4{--c:#6a4fb5}.s5{--c:#2f6fb0}
+.confmap .mk .pin{fill:var(--c);stroke:#fff;stroke-width:1.5}
+:root[data-theme="dark"] .confmap .mk .pin{stroke:#0c1725}
+@media (prefers-color-scheme:dark){.confmap .mk .pin{stroke:#0c1725}}
+.confmap .mk .halo{fill:var(--c);opacity:.2}
+.confmap-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px}
 .confmap-legend .cl{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft)}
-.confmap-legend .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.confmap-legend .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 20%,transparent)}
+.confmap-legend .n{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--wash);border-radius:20px;padding:1px 7px;margin-left:1px}
 .listwrap{max-width:920px}
 .conf-item{display:grid;grid-template-columns:96px 1fr;gap:22px;padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
 .conf-item .cd{font-family:var(--sans);font-size:14px;color:var(--navy);font-weight:600}
@@ -463,8 +471,15 @@ footer{background:var(--navy-deep);color:#cddcef;padding:42px 0;margin-top:40px}
   .hstats-grid{grid-template-columns:1fr 1fr}.hstat{padding:22px 14px}
   .hero-in{padding-block:70px 58px}
   .paper{grid-template-columns:1fr}.paper-fig{max-width:180px}
+  .confmap-card{padding:16px 14px}
+  .confmap .mk .pin{r:6.2}
+  .confmap .mk .halo{r:10}
   .conf-item,.notice-item,.trow,.arow{grid-template-columns:1fr;gap:6px}
-  .bin{grid-template-columns:104px 1fr 36px}
+  .jcr-wrap{padding:20px 16px}
+  .bin{grid-template-columns:1fr auto;gap:7px 10px;margin-bottom:16px}
+  .bin .bl{grid-area:1/1}
+  .bin .bv{grid-area:1/2}
+  .bin .bt{grid-area:2/1/3/3;height:20px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}.reveal{transition:none;opacity:1;transform:none}
