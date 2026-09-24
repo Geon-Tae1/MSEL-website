@@ -9,7 +9,7 @@
     {id:'lecture',label:'Lecture'},
     {id:'activities',label:'Activities'},
     {id:'notice',label:'Notice'},
-    {id:'labaccess',label:'Lab Access Only',lock:true,children:[{id:'labaccess',label:'Project'}]},
+    {id:'labaccess',label:'Lab Access Only',lock:true},
     {id:'contact',label:'Contact'}
   ];
   var C2P={}; NAV.forEach(function(n){if(n.children)n.children.forEach(function(c){C2P[c.id]=n.id;});});
@@ -46,8 +46,24 @@
   var foot=document.getElementById('site-footer'); if(foot)foot.innerHTML=FOOT;
 
   var mb=document.getElementById('menu-btn'), menu=document.getElementById('menu');
-  if(mb)mb.addEventListener('click',function(){var o=menu.classList.toggle('open');mb.setAttribute('aria-expanded',o?'true':'false');});
-  if(menu)menu.addEventListener('click',function(e){if(e.target.closest('a')){menu.classList.remove('open');if(mb)mb.setAttribute('aria-expanded','false');}});
+  // Anchor the mobile panel just under the real header box (the brand can wrap to
+  // two lines, so a hard-coded top offset clipped the first items).
+  function placeMenu(){
+    if(!menu)return;
+    var h=document.querySelector('header.nav');
+    var top=h?Math.round(h.getBoundingClientRect().bottom)+8:74;
+    menu.style.setProperty('--menu-top',Math.max(8,top)+'px');
+  }
+  function closeMenu(){if(!menu)return;menu.classList.remove('open');if(mb)mb.setAttribute('aria-expanded','false');}
+  if(mb)mb.addEventListener('click',function(){
+    var open=!menu.classList.contains('open');
+    if(open){placeMenu();menu.classList.add('open');menu.scrollTop=0;}
+    else menu.classList.remove('open');
+    mb.setAttribute('aria-expanded',open?'true':'false');
+  });
+  if(menu)menu.addEventListener('click',function(e){if(e.target.closest('a'))closeMenu();});
+  window.addEventListener('resize',function(){if(menu&&menu.classList.contains('open'))placeMenu();},{passive:true});
+  window.addEventListener('scroll',function(){if(menu&&menu.classList.contains('open'))placeMenu();},{passive:true});
 
   function observe(scope){
     var els=(scope||document).querySelectorAll('.reveal:not(.in)');

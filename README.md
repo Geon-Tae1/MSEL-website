@@ -3,6 +3,28 @@
 Prof. Geon-Tae Park (한양대 에너지공학과 · 배터리공학과) 연구실 홈페이지.
 **멀티페이지 정적 사이트**입니다 — 상단 메뉴를 누르면 실제로 페이지가 바뀝니다(idealab 방식).
 
+## 여러 대의 컴퓨터에서 작업하기
+
+이 저장소(GitHub) 자체가 동기화 장치입니다. Dropbox 같은 별도 폴더 동기화는
+쓰지 마세요 — `.git` 폴더가 두 컴퓨터에서 동시에 덮어써지면 저장소가 깨집니다.
+
+컴퓨터마다 **한 번만**:
+
+```
+git clone https://github.com/geon-tae1/MSEL-website.git
+```
+
+그 다음부터는 항상 이 순서로:
+
+| 시점 | 명령 (PowerShell) | 명령 (Git Bash) |
+| --- | --- | --- |
+| 작업 **시작 전** | `.\sync.ps1` | `./sync.sh` |
+| 작업 **끝난 후** | `.\sync.ps1 "수정 내용 설명"` | `./sync.sh "수정 내용 설명"` |
+
+`sync` 는 `git pull --rebase` → `git add -A` → `git commit` → `git push` 를 한 번에 합니다.
+push 후 1~2분이면 https://geon-tae1.github.io/MSEL-website/ 에 반영됩니다.
+
+
 ## 페이지 구성
 ```
 index.html         Home
@@ -14,7 +36,7 @@ publications.html  Publications (요약 + 연도별 논문)
 conference.html    Conference (연도별)
 lecture.html       Lecture (학부/대학원)
 notice.html        Notice
-labaccess.html     Lab Access Only (관계자 전용 · 암호 게이트, 안에 Project 항)
+labaccess.html     Lab Access Only (관계자 전용 · 암호 게이트 통과 후에만 Project 내용 노출)
 activities.html    Activities (활동 사진 — 추후)
 contact.html       Contact
 ```
