@@ -25,8 +25,8 @@
   function buildHeader(active){
     var links=NAV.map(function(n){
       var lk=n.lock?(' '+LOCK):'';
-      // force a second row starting at "Lecture" (balances the wrapped desktop nav)
-      var brk=(n.id==='lecture')?'<span class="nav-break" aria-hidden="true"></span>':'';
+      // force a second row starting at "Notice" (balances the wrapped desktop nav: 6 / 4)
+      var brk=(n.id==='notice')?'<span class="nav-break" aria-hidden="true"></span>':'';
       if(n.children){
         var sub=n.children.map(function(c){return '<a href="'+href(c.id)+'" data-nav="'+c.id+'"'+(c.id===active?' class="active"':'')+'>'+c.label+'</a>';}).join('');
         var top='<a href="'+href(n.children[0].id)+'" data-nav="'+n.id+'"'+(isActive(n.id,active)?' class="active"':'')+'>'+n.label+lk+CHEV+'</a>';
