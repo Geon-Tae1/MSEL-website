@@ -439,6 +439,7 @@ footer{background:var(--navy-deep);color:#cddcef;padding:42px 0;margin-top:40px}
   .brand .bt b{font-size:14px;white-space:normal;line-height:1.2}
   .brand .mark{width:26px;height:26px}
   .nav-right{flex:0 0 auto}
+  .wrap{padding:0 34px}
   .teach,.future,.home-cards,.members,.sumgrid{grid-template-columns:1fr}
   .rep-grid,.gallery{grid-template-columns:1fr 1fr}
   .hstats-grid{grid-template-columns:1fr 1fr}.hstat{padding:22px 14px}
