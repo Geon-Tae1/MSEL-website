@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>준비 일정표 — 선양국 교수님 정년퇴임 기념 심포지엄</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../styles.css?v=56c2cff1">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body data-page="schedule">
+<div id="site-header"></div>
+<main>
+
+<div class="page-head"><div class="strata"></div><div class="wrap page-head-in reveal">
+  <div class="eyebrow">준비 일정표</div>
+  <h1>조사에서 운영까지, 아홉 단계</h1>
+  <p>주변 날짜를 파악하는 일에서 시작해 날짜를 못 박고, 예약하고, 만들고, 당일을 운영하기까지의 순서입니다.
+     모든 일이 날짜 확정에 매여 있어 두 번째 단계가 가장 급합니다.</p>
+</div></div>
+
+<section class="section"><div class="wrap">
+  <div id="steps" class="steps"></div>
+</div></section>
+
+</main>
+<div id="site-footer"></div>
+<script defer src="data.js?v=1"></script>
+<script defer src="app.js?v=1"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  var D = window.SYM, el = window.SYMUI.el, box = document.getElementById('steps');
+  if (!D || !box) return;
+  D.steps.forEach(function (s) {
+    box.appendChild(el('div', { class: 'step reveal in' + (s.done ? ' done' : '') }, [
+      el('div', { class: 'ph' }, [s.phase]),
+      el('h3', {}, [s.title]),
+      el('div', { class: 'due' }, ['기한 ' + s.due]),
+      el('p', {}, [s.detail]),
+      s.note ? el('div', { class: 'note' }, [s.note]) : null,
+      el('span', { class: 'chk' }, [s.done ? '완료' : '진행 전'])
+    ]));
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>동문 명단 — 선양국 교수님 정년퇴임 기념 심포지엄</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../styles.css?v=56c2cff1">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body data-page="alumni">
+<div id="site-header"></div>
+<main>
+
+<div class="page-head"><div class="strata"></div><div class="wrap page-head-in reveal">
+  <div class="eyebrow">동문 명단</div>
+  <h1>연구실을 거쳐 간 사람들</h1>
+  <p>박사 → 석사 → 재학생 순입니다. 바뀐 소속이나 연락처, 빠진 분이 있으면 알려 주시면 고치겠습니다.</p>
+</div></div>
+
+<section class="section"><div class="wrap">
+
+  <div class="gate-sym reveal" id="gate">
+    <div class="lk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></div>
+    <div class="tx">
+      <b>연락처는 암호를 넣으면 보입니다</b>
+      <span>휴대폰 번호와 이메일은 동문 본인들의 개인정보라 바로 열어 두지 않았습니다. 암호는 안내 메일에 함께 보내 드립니다.</span>
+    </div>
+    <form id="gate-form">
+      <input id="gate-input" type="password" placeholder="암호" autocomplete="off" aria-label="암호">
+      <button class="btn btn-sym btn-sm" type="submit">열기</button>
+    </form>
+    <div class="err" id="gate-err"></div>
+  </div>
+
+  <div class="toolbar reveal" style="margin-top:26px">
+    <input type="search" id="q" placeholder="이름 · 소속으로 찾기" aria-label="검색">
+    <select id="f-rank" aria-label="과정">
+      <option value="">전체 과정</option><option value="0">박사</option><option value="1">석사</option><option value="2">재학생</option>
+    </select>
+    <span class="count" id="cnt"></span>
+  </div>
+
+  <div class="tbl-wrap reveal">
+    <table class="t">
+      <thead><tr>
+        <th style="width:150px">이름</th><th style="width:92px">과정</th><th>소속</th>
+        <th class="ct-col" style="width:140px">휴대폰</th><th class="ct-col" style="width:210px">이메일</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="srcnote reveal">출처 — 연구실 연락처 명부와 ESCML 홈페이지. 두 자료가 다를 때는 명부를 우선했습니다.</p>
+
+</div></section>
+
+</main>
+<div id="site-footer"></div>
+<script defer src="data.js?v=1"></script>
+<script defer src="app.js?v=1"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  // 주의 — 화면을 가리는 장치일 뿐 실제 보안이 아닙니다.
+  var PASSCODE = 'escml2027';
+
+  var D = window.SYM, el = window.SYMUI.el;
+  if (!D) return;
+  var NAMES = { 0: '박사', 1: '석사', 2: '재학생' };
+  var open = false, q = '', rank = '';
+
+  function ctCols(on) {
+    document.querySelectorAll('.ct-col').forEach(function (n) { n.style.display = on ? '' : 'none'; });
+  }
+
+  function rows() {
+    var tb = document.getElementById('rows');
+    tb.innerHTML = '';
+    var list = D.people.filter(function (p) {
+      if (rank !== '' && String(p.rank) !== rank) return false;
+      if (!q) return true;
+      var s = (p.name + ' ' + (p.en || '') + ' ' + (p.org || '')).toLowerCase();
+      return s.indexOf(q.toLowerCase()) >= 0;
+    });
+    var last = null, n = 0;
+    list.forEach(function (p) {
+      if (p.rank !== last) {
+        last = p.rank;
+        tb.appendChild(el('tr', { class: 'grp' }, [el('td', { colspan: '5' }, [NAMES[p.rank] || ''])]));
+      }
+      n++;
+      var ct = (open && window.SYM_CONTACT) ? (window.SYM_CONTACT[p.id] || {}) : {};
+      tb.appendChild(el('tr', {}, [
+        el('td', {}, [el('span', { class: 'nm' }, [p.name]),
+          p.en ? el('span', { class: 'en' }, [p.en]) : null]),
+        el('td', {}, [el('span', { class: 'sypill' }, [p.deg || '—'])]),
+        el('td', { class: p.org ? '' : 'muted' }, [p.org || '미확인']),
+        el('td', { class: 'syct ct-col' + (ct.tel ? '' : ' muted') }, [ct.tel || (open ? '—' : '')]),
+        el('td', { class: 'syct ct-col' + (ct.mail ? '' : ' muted') },
+          [ct.mail ? el('a', { href: 'mailto:' + ct.mail }, [ct.mail]) : (open ? '—' : '')])
+      ]));
+    });
+    document.getElementById('cnt').textContent = n + '명';
+    ctCols(open);
+  }
+
+  function unlock() {
+    open = true;
+    document.getElementById('gate').style.display = 'none';
+    try { sessionStorage.setItem('sym_ct', '1'); } catch (_) {}
+    if (window.SYM_CONTACT) { rows(); return; }
+    var s = document.createElement('script');
+    s.src = 'contacts.js?v=1';
+    s.onload = rows;
+    s.onerror = rows;
+    document.head.appendChild(s);
+  }
+
+  document.getElementById('gate-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = document.getElementById('gate-input').value.trim();
+    if (v === PASSCODE) unlock();
+    else document.getElementById('gate-err').textContent = '암호가 맞지 않습니다.';
+  });
+  document.getElementById('q').addEventListener('input', function (e) { q = e.target.value; rows(); });
+  document.getElementById('f-rank').addEventListener('change', function (e) { rank = e.target.value; rows(); });
+
+  rows();
+  try { if (sessionStorage.getItem('sym_ct') === '1') unlock(); } catch (_) {}
+});
+</script>
+</body>
+</html>

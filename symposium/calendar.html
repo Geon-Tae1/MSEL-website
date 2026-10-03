@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2027년 1 · 2월 달력 — 선양국 교수님 정년퇴임 기념 심포지엄</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../styles.css?v=56c2cff1">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body data-page="calendar">
+<div id="site-header"></div>
+<main>
+
+<div class="page-head"><div class="strata"></div><div class="wrap page-head-in reveal">
+  <div class="eyebrow">달력</div>
+  <h1>2027년 1월 · 2월</h1>
+  <p>공휴일과 설 연휴, 학교 공식 퇴임식, 국내외 학회, 기업 실적발표, 대학 학위수여식을 한 장에 올렸습니다.
+     후보일을 고를 때 본 근거가 그대로 들어 있습니다.</p>
+</div></div>
+
+<section class="section"><div class="wrap">
+  <div class="legend reveal">
+    <span><b class="c-crit"></b>공휴일 · 학교 퇴임식</span>
+    <span><b class="c-warn"></b>주의가 필요한 일정</span>
+    <span><b class="c-info"></b>참고</span>
+    <span><b class="c-good"></b>우리 행사 후보</span>
+  </div>
+  <div class="months reveal" id="months"></div>
+
+  <div class="subhead reveal">달력에 올린 일정</div>
+  <div class="tbl-wrap reveal">
+    <table class="t">
+      <thead><tr><th style="width:150px">기간</th><th style="width:110px">구분</th><th style="width:270px">일정</th><th>메모</th></tr></thead>
+      <tbody id="evrows"></tbody>
+    </table>
+  </div>
+</div></section>
+
+</main>
+<div id="site-footer"></div>
+<script defer src="data.js?v=1"></script>
+<script defer src="app.js?v=1"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  var D = window.SYM, el = window.SYMUI.el, fmt = window.SYMUI.fmt;
+  if (!D) return;
+
+  var evs = D.events.slice();
+  D.cands.forEach(function (c, i) {
+    evs.push({ id: c.id, start: c.start, end: c.end, title: '★ 후보 ' + (i + 1) + ' · ' + c.label,
+               cat: '행사 후보', level: 'good', note: c.why });
+  });
+
+  function month(y, mo) {
+    var box = el('div', { class: 'month' }, [el('h3', {}, [y + '년 ' + mo + '월'])]);
+    var g = el('div', { class: 'cal' });
+    ['월', '화', '수', '목', '금', '토', '일'].forEach(function (w, i) {
+      g.appendChild(el('div', { class: 'dw' + (i === 6 ? ' sun' : '') }, [w]));
+    });
+    var lead = (new Date(y, mo - 1, 1).getDay() + 6) % 7;
+    for (var i = 0; i < lead; i++) g.appendChild(el('div', { class: 'day pad' }));
+    var last = new Date(y, mo, 0).getDate();
+    for (var d = 1; d <= last; d++) {
+      var iso = y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      var hits = evs.filter(function (e) { return iso >= e.start && iso <= (e.end || e.start); });
+      var isSun = new Date(y, mo - 1, d).getDay() === 0;
+      var fix = hits.some(function (e) { return e.level === 'good'; });
+      var cell = el('div', { class: 'day' + (isSun ? ' sun' : '') + (fix ? ' fix' : '') },
+        [el('div', { class: 'num' }, [String(d)])]);
+      hits.slice(0, 3).forEach(function (e) {
+        cell.appendChild(el('span', { class: 'sychip c-' + e.level, title: e.title }, [e.title]));
+      });
+      if (hits.length > 3) cell.appendChild(el('span', { class: 'sychip c-info' }, ['+' + (hits.length - 3)]));
+      g.appendChild(cell);
+    }
+    box.appendChild(g);
+    return box;
+  }
+
+  var m = document.getElementById('months');
+  m.appendChild(month(2027, 1));
+  m.appendChild(month(2027, 2));
+
+  var tb = document.getElementById('evrows');
+  evs.slice().sort(function (a, b) { return a.start < b.start ? -1 : 1; }).forEach(function (e) {
+    var span = e.end && e.end !== e.start ? fmt(e.start) + ' ~ ' + fmt(e.end) : fmt(e.start);
+    tb.appendChild(el('tr', {}, [
+      el('td', { class: 'syct' }, [span]),
+      el('td', {}, [el('span', { class: 'sypill' + (e.level === 'good' ? ' ok' : '') }, [e.cat])]),
+      el('td', {}, [el('span', { class: 'nm' }, [e.title])]),
+      el('td', { class: e.note ? '' : 'muted' }, [e.note || '—'])
+    ]));
+  });
+});
+</script>
+</body>
+</html>
