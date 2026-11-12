@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lab Access Only — Materials for Sustainable Energy Lab</title>
 <meta name="description" content="Materials for Sustainable Energy Lab, led by Prof. Geon-Tae Park at Hanyang University.">
-<link rel="stylesheet" href="styles.css?v=56c2cff1">
+<link rel="stylesheet" href="styles.css?v=0713a379">
 </head>
 <body data-page="labaccess">
 <div id="site-header"></div>
@@ -30,7 +30,7 @@
 
 </main>
 <div id="site-footer"></div>
-<script defer src="app.js?v=56c2cff1"></script>
+<script defer src="app.js?v=0713a379"></script>
 <script>
 (function(){
   // NOTE: client-side gate only — NOT real security. Do not put confidential data
@@ -83,7 +83,20 @@
       period:"2026.10.01 – 2028.03.31",
       budget:"2026 : 28,400,000 KRW (2026.10.01 – 2027.03.31, 6 mo) · 2027 : 88,500,000 KRW (2027.04.01 – 2028.03.31, 1 yr) · 116,900,000 KRW total",
       amount:116900000, no:"RS-2026-25626796",
-      lead:"한국전력공사 장재원 박사", part:"한양대학교 박건태 교수", manageURL:""
+      lead:"한국전력공사 장재원 박사", part:"한양대학교 박건태 교수", manageURL:"",
+      bridge:"2028년 착수 예정인 한국에너지기술평가원(KETEP) 대형과제(약 300억 원, 4–5년)로 가기 위한 브릿지 과제"
+    },
+    {
+      // 아직 공고 전 — 착수 시 실제 과제명·과제번호·연구비로 바꾸고 planned 표시를 지운다.
+      cat:"national", role:"Planned · 2028", planned:true,
+      title:"Large-Scale Next-Generation Secondary-Battery ESS Program (follow-on to the ESS Basic Design bridge project)",
+      titleKo:"차세대 이차전지 기반 ESS 대형과제 (ESS 기본설계 브릿지 과제의 후속 과제 · 기획 단계)",
+      funder:"한국에너지기술평가원 (KETEP) 주관",
+      period:"2028 – (4–5 yrs, planned)",
+      budget:"약 30,000,000,000 KRW (≈300억 원) 규모 · 예정",
+      amount:null, lead:"",
+      note:"ESS 기본설계(2026.10 – 2028.03)에서 쌓는 셀·시스템 설계 결과와 한국전력공사 협력 체계를 바탕으로 진입을 목표로 하는 대형과제입니다. 브릿지 과제는 이 과제를 위한 초석입니다.",
+      manageURL:""
     },
     {
       cat:"national", role:"Participating",
@@ -145,30 +158,47 @@
   var host=document.getElementById('proj-groups');
   if(!host) return;
   function roleTag(r){
-    var pi=/principal/i.test(r);
-    return '<span class="pt '+(pi?'pi':'part')+'">'+esc(r)+'</span>';
+    var pi=/principal/i.test(r), pl=/planned/i.test(r);
+    return '<span class="pt '+(pi?'pi':pl?'plan':'part')+'">'+esc(r)+'</span>';
   }
   function card(p){
     var link=p.manageURL
       ? '<a class="pjmanage" href="'+esc(p.manageURL)+'" target="_blank" rel="noopener">Manage details →</a>'
       : '<span class="pjmanage soon">Management page — coming soon</span>';
     var ko=p.titleKo?'<div class="pjko">'+esc(p.titleKo)+'</div>':'';
-    var bud=p.budget?'<div class="pjbudget">'+esc(p.budget)+'</div>'
+    var bud=p.budget?'<div class="pjbudget'+(p.planned?' plan':'')+'">'+esc(p.budget)+'</div>'
       :'<div class="pjbudget none">참여 역할 · 연구비 합계 미포함</div>';
-    return '<div class="pjcard">'+
+    if(p.planned) link='<span class="pjmanage soon">공고 전 · 연구비 합계 미포함</span>';
+    return '<div class="pjcard'+(p.planned?' planned':'')+'">'+
       roleTag(p.role)+
       '<h3>'+esc(p.title)+'</h3>'+ko+
       '<div class="pm"><b>'+esc(p.period)+'</b> · '+esc(p.funder)+'</div>'+
       (p.lead?'<div class="pm">주관 '+esc(p.lead)+(p.part?' · 참여 '+esc(p.part):'')+'</div>':'')+
       (p.no?'<div class="pm">연구개발과제번호 '+esc(p.no)+'</div>':'')+
+      (p.bridge?'<div class="pjbridge"><b>Bridge project</b> · '+esc(p.bridge)+'</div>':'')+
+      (p.note?'<div class="pjnote">'+esc(p.note)+'</div>':'')+
       bud+ link+
     '</div>';
   }
-  function group(cat){return PROJ.filter(function(p){return p.cat===cat;}).map(card).join('');}
+  // A project with "bridge" is drawn side by side with the planned project that follows it.
+  function group(cat){
+    var list=PROJ.filter(function(p){return p.cat===cat;}), out='';
+    for(var i=0;i<list.length;i++){
+      var p=list[i], q=list[i+1];
+      if(p.bridge&&q&&q.planned){
+        out+='<div class="proj-pair">'+card(p)+
+          '<div class="pair-arrow" aria-hidden="true"><span>2028</span><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>'+
+          card(q)+'</div>';
+        i++;
+      } else out+=card(p);
+    }
+    return out;
+  }
 
   // ---- cumulative funding ----
   var sums={national:0,industry:0,hanyang:0,total:0}, subonly=0, funded=0;
   PROJ.forEach(function(p){
+    if(p.planned) return;   // 아직 수주 전인 예정 과제
     if(typeof p.amount==="number"){sums[p.cat]+=p.amount;sums.total+=p.amount;funded++;}
     else subonly++;   // 참여 역할만 한 과제 — 수주 연구비 없음
   });
